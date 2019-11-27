@@ -9,15 +9,15 @@ import com.wayfair.todomvrxdatabinding.ViewModelFactory
 import com.wayfair.todomvrxdatabinding.tasklist.databinding.TaskListFragmentBinding
 import javax.inject.Inject
 
-class TaskListFragment : BaseFragment<TaskListFragmentBinding>(), HasViewModelFactory<TaskListState> {
+class TaskListFragment : BaseFragment<TaskListFragmentBinding>() {
 
-    @Inject
-    internal lateinit var viewModelFactory: TaskListViewModel.Factory
+    /*@Inject
+    internal lateinit var viewModelFactory: TaskListViewModel.Factory*/
     @Inject
     internal lateinit var viewBindingFactory: TaskListViewBinding.Factory
 
-    override val factory: ViewModelFactory<TaskListState>
-        get() = viewModelFactory
+    /*override val factory: ViewModelFactory<TaskListState>
+        get() = viewModelFactory*/
 
     override val layoutId: Int
         get() = R.layout.task_list_fragment

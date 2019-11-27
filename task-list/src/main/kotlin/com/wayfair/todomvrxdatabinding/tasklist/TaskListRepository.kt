@@ -9,7 +9,7 @@ import io.reactivex.annotations.CheckReturnValue
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-internal class TaskListRepository @Inject constructor(
+class TaskListRepository @Inject constructor(
     private val dao: TasksDao
 ) {
 

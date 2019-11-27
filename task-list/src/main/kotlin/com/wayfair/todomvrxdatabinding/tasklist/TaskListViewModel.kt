@@ -5,15 +5,15 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import com.wayfair.todomvrxdatabinding.AssistedViewModelFactory
 import com.wayfair.todomvrxdatabinding.BaseViewModel
-import com.wayfair.todomvrxdatabinding.ViewModelFactory
 import com.wayfair.todomvrxdatabinding.data.Task
 import com.wayfair.todomvrxdatabinding.ktx.createViewModel
 import io.reactivex.schedulers.Schedulers
 
-internal class TaskListViewModel @AssistedInject constructor(
-    private val repository: TaskListRepository,
-    @Assisted initialState: TaskListState
+class TaskListViewModel @AssistedInject constructor(
+        private val repository: TaskListRepository,
+        @Assisted initialState: TaskListState
 ) : BaseViewModel<TaskListState>(initialState) {
 
     init {
@@ -23,11 +23,11 @@ internal class TaskListViewModel @AssistedInject constructor(
     private fun observeTasksChanges() {
         withState { state ->
             repository.observeTasks(delay = state.tasks.shouldLoad)
-                .subscribeOn(Schedulers.io())
-                .map { it.mapToTaskItem() }
-                .execute {
-                    copy(tasks = it)
-                }
+                    .subscribeOn(Schedulers.io())
+                    .map { it.mapToTaskItem() }
+                    .execute {
+                        copy(tasks = it)
+                    }
         }
     }
 
@@ -38,9 +38,9 @@ internal class TaskListViewModel @AssistedInject constructor(
     @SuppressLint("RxJava2SubscribeMissingOnError")
     fun onTaskCheckboxClick(taskListItem: TaskListItem) {
         repository.setComplete(taskListItem.id, !taskListItem.complete)
-            .subscribeOn(Schedulers.io())
-            .subscribe() // used instead of `execute` since we don't handle the result
-            .disposeOnClear()
+                .subscribeOn(Schedulers.io())
+                .subscribe() // used instead of `execute` since we don't handle the result
+                .disposeOnClear()
     }
 
     fun onNavigatedToTaskDetail() = setState {
@@ -50,19 +50,31 @@ internal class TaskListViewModel @AssistedInject constructor(
     @SuppressLint("RxJava2SubscribeMissingOnError")
     fun onMenuClearAllClick() {
         repository.clearTasks()
-            .subscribeOn(Schedulers.io())
-            .subscribe() // used instead of `execute` since we don't handle the result
-            .disposeOnClear()
+                .subscribeOn(Schedulers.io())
+                .subscribe() // used instead of `execute` since we don't handle the result
+                .disposeOnClear()
     }
 
-    @AssistedInject.Factory
+    /*@AssistedInject.Factory
     interface Factory : ViewModelFactory<TaskListState> {
         override fun create(initialState: TaskListState): TaskListViewModel
+    }*/
+
+    @AssistedInject.Factory
+    interface Factory : AssistedViewModelFactory<TaskListViewModel, TaskListState> {
+        override fun create(state: TaskListState): TaskListViewModel
     }
+
+    /*companion object : DaggerMvRxViewModelFactory<TaskListViewModel, TaskListState>(TaskListViewModel::class.java) {
+        private fun List<Task>.mapToTaskItem() = map { task ->
+            TaskListItem(task.id, task.title, task.complete)
+        }
+    }*/
+
 
     companion object : MvRxViewModelFactory<TaskListViewModel, TaskListState> {
         override fun create(viewModelContext: ViewModelContext, state: TaskListState): TaskListViewModel =
-            viewModelContext.createViewModel(state)
+                viewModelContext.createViewModel(state)
 
         private fun List<Task>.mapToTaskItem() = map { task ->
             TaskListItem(task.id, task.title, task.complete)

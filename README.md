@@ -1,12 +1,3 @@
-#https://github.com/PraveenTalari/todomvrxdatabinding/ :
-
-Trying to remove dagger-android and use dagger 2 alone
-
-The dagger2 branch is having some compilation issues.
-
-
-#https://github.com/wayfair-contribs/todomvrxdatabinding :
-
 ToDo MvRx with databinding
 ======================
 
